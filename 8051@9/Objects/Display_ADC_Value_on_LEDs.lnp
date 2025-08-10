@@ -1,0 +1,3 @@
+".\Objects\main.obj" 
+TO ".\Objects\Display_ADC_Value_on_LEDs" 
+PRINT(".\Listings\Display_ADC_Value_on_LEDs.m51") RAMSIZE(256) 

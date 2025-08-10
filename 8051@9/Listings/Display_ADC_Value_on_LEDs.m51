@@ -1,0 +1,204 @@
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                    06/03/2025  19:59:12  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V6.22.4.0, INVOKED BY:
+D:\C51\BIN\BL51.EXE .\Objects\main.obj TO .\Objects\Display_ADC_Value_on_LEDs PRINT (.\Listings\Display_ADC_Value_on_LED
+>> s.m51) RAMSIZE (256)
+
+
+MEMORY MODEL: SMALL
+
+
+INPUT MODULES INCLUDED:
+  .\Objects\main.obj (MAIN)
+  D:\C51\LIB\C51S.LIB (?C_STARTUP)
+  D:\C51\LIB\C51S.LIB (?C?CLDPTR)
+  D:\C51\LIB\C51S.LIB (?C?CSTPTR)
+  D:\C51\LIB\C51S.LIB (?C?CSTOPTR)
+
+
+LINK MAP OF MODULE:  .\Objects\Display_ADC_Value_on_LEDs (MAIN)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+            DATA    0008H     0007H     UNIT         _DATA_GROUP_
+            IDATA   000FH     0001H     UNIT         ?STACK
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0003H     ABSOLUTE     
+                    0003H     07FDH                  *** GAP ***
+            CODE    0800H     004DH     UNIT         ?C?LIB_CODE
+            CODE    084DH     003AH     UNIT         ?PR?_BYTETOASCII?MAIN
+            CODE    0887H     002BH     UNIT         ?PR?MAIN?MAIN
+            CODE    08B2H     0025H     UNIT         ?PR?_UART_SENDSTRING?MAIN
+            CODE    08D7H     0014H     UNIT         ?PR?READ_ADC?MAIN
+            CODE    08EBH     0013H     UNIT         ?PR?UART_INIT?MAIN
+            CODE    08FEH     000FH     UNIT         ?PR?DELAY_US?MAIN
+            CODE    090DH     000CH     UNIT         ?C_C51STARTUP
+            CODE    0919H     0008H     UNIT         ?PR?_UART_SENDBYTE?MAIN
+
+
+
+OVERLAY MAP OF MODULE:   .\Objects\Display_ADC_Value_on_LEDs (MAIN)
+
+
+SEGMENT                             DATA_GROUP 
+  +--> CALLED SEGMENT             START    LENGTH
+-------------------------------------------------
+?C_C51STARTUP                     -----    -----
+  +--> ?PR?MAIN?MAIN
+
+?PR?MAIN?MAIN                     0008H    0004H
+  +--> ?PR?UART_INIT?MAIN
+  +--> ?PR?READ_ADC?MAIN
+  +--> ?PR?_BYTETOASCII?MAIN
+  +--> ?PR?_UART_SENDSTRING?MAIN
+  +--> ?PR?_UART_SENDBYTE?MAIN
+  +--> ?PR?DELAY_US?MAIN
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  06/03/2025  19:59:12  PAGE 2
+
+
+
+?PR?READ_ADC?MAIN                 -----    -----
+  +--> ?PR?DELAY_US?MAIN
+
+?PR?_UART_SENDSTRING?MAIN         000CH    0003H
+  +--> ?PR?_UART_SENDBYTE?MAIN
+
+
+
+SYMBOL TABLE OF MODULE:  .\Objects\Display_ADC_Value_on_LEDs (MAIN)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        MAIN
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  D:0090H         PUBLIC        P1
+  D:00A0H         PUBLIC        P2
+  D:00B0H         PUBLIC        P3
+  B:0098H.0       PUBLIC        RI
+  B:0098H.1       PUBLIC        TI
+  C:08B2H         PUBLIC        _UART_SendString
+  C:0887H         PUBLIC        main
+  C:08D7H         PUBLIC        read_adc
+  D:0099H         PUBLIC        SBUF
+  C:08EBH         PUBLIC        UART_Init
+  D:0098H         PUBLIC        SCON
+  D:0089H         PUBLIC        TMOD
+  B:00B0H.7       PUBLIC        ADC_RD
+  C:0919H         PUBLIC        _UART_SendByte
+  C:084DH         PUBLIC        _ByteToASCII
+  D:008DH         PUBLIC        TH1
+  B:00B0H.6       PUBLIC        ADC_WR
+  B:0088H.6       PUBLIC        TR1
+  C:08FEH         PUBLIC        delay_us
+  B:00B0H.2       PUBLIC        ADC_INTR
+  -------         PROC          DELAY_US
+  -------         DO            
+  D:0006H         SYMBOL        i
+  -------         ENDDO         
+  C:08FEH         LINE#         58
+  C:08FEH         LINE#         60
+  C:090CH         LINE#         61
+  -------         ENDPROC       DELAY_US
+  -------         PROC          READ_ADC
+  -------         DO            
+  D:0007H         SYMBOL        value
+  -------         ENDDO         
+  C:08D7H         LINE#         63
+  C:08D7H         LINE#         65
+  C:08D9H         LINE#         66
+  C:08DCH         LINE#         67
+  C:08DEH         LINE#         69
+  C:08E1H         LINE#         71
+  C:08E3H         LINE#         72
+  C:08E6H         LINE#         73
+  C:08E8H         LINE#         74
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  06/03/2025  19:59:12  PAGE 3
+
+
+  C:08EAH         LINE#         75
+  C:08EAH         LINE#         76
+  -------         ENDPROC       READ_ADC
+  -------         PROC          UART_INIT
+  C:08EBH         LINE#         78
+  C:08EBH         LINE#         79
+  C:08EEH         LINE#         80
+  C:08F1H         LINE#         81
+  C:08F4H         LINE#         82
+  C:08F7H         LINE#         83
+  C:08F9H         LINE#         84
+  C:08FDH         LINE#         85
+  -------         ENDPROC       UART_INIT
+  -------         PROC          _UART_SENDBYTE
+  D:0007H         SYMBOL        b
+  C:0919H         LINE#         87
+  C:0919H         LINE#         88
+  C:091BH         LINE#         89
+  C:091EH         LINE#         90
+  C:0920H         LINE#         91
+  -------         ENDPROC       _UART_SENDBYTE
+  -------         PROC          _UART_SENDSTRING
+  D:000CH         SYMBOL        str
+  C:08B2H         LINE#         93
+  C:08B8H         LINE#         94
+  C:08C3H         LINE#         95
+  C:08D4H         LINE#         96
+  C:08D6H         LINE#         97
+  -------         ENDPROC       _UART_SENDSTRING
+  -------         PROC          _BYTETOASCII
+  D:0007H         SYMBOL        val
+  D:0001H         SYMBOL        buf
+  C:084DH         LINE#         99
+  C:084DH         LINE#         100
+  C:0854H         LINE#         101
+  C:0869H         LINE#         102
+  C:087CH         LINE#         103
+  -------         ENDPROC       _BYTETOASCII
+  -------         PROC          MAIN
+  -------         DO            
+  D:0005H         SYMBOL        adc_val
+  D:0008H         SYMBOL        ascii_buf
+  -------         ENDDO         
+  C:0887H         LINE#         106
+  C:0887H         LINE#         110
+  C:088AH         LINE#         111
+  C:088DH         LINE#         113
+  C:0890H         LINE#         115
+  C:0890H         LINE#         116
+  C:0895H         LINE#         117
+  C:0897H         LINE#         118
+  C:08A0H         LINE#         119
+  C:08A3H         LINE#         120
+  C:08A8H         LINE#         121
+  C:08ADH         LINE#         123
+  C:08B0H         LINE#         124
+  -------         ENDPROC       MAIN
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  06/03/2025  19:59:12  PAGE 4
+
+
+  -------         ENDMOD        MAIN
+
+  -------         MODULE        ?C?CLDPTR
+  C:0800H         PUBLIC        ?C?CLDPTR
+  -------         ENDMOD        ?C?CLDPTR
+
+  -------         MODULE        ?C?CSTPTR
+  C:0819H         PUBLIC        ?C?CSTPTR
+  -------         ENDMOD        ?C?CSTPTR
+
+  -------         MODULE        ?C?CSTOPTR
+  C:082BH         PUBLIC        ?C?CSTOPTR
+  -------         ENDMOD        ?C?CSTOPTR
+
+******************************************************************************
+* RESTRICTED VERSION WITH 0800H BYTE CODE SIZE LIMIT; USED: 00C8H BYTE ( 9%) *
+******************************************************************************
+
+Program Size: data=16.0 xdata=0 code=292
+LINK/LOCATE RUN COMPLETE.  0 WARNING(S),  0 ERROR(S)

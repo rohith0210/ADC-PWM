@@ -1,0 +1,153 @@
+C51 COMPILER V9.60.7.0   MAIN                                                              06/03/2025 19:59:12 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: D:\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\main.lst) TA
+                    -BS(2) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          /*#include <reg51.h>
+   2          
+   3          // Rename the control bits so they don’t clash with existing macros:
+   4          sbit ADC_WR   = P3^6;   // ADC0804 WR pin
+   5          sbit ADC_RD   = P3^7;   // ADC0804 RD pin
+   6          sbit ADC_INTR = P3^2;   // ADC0804 INTR pin
+   7          
+   8          #define ADC_DATA  P1    // Port 1 for ADC data lines D0–D7
+   9          
+  10          void delay_us(void) {
+  11              unsigned int i;
+  12              for (i = 0; i < 5000; i++); // ~5 000-cycle delay
+  13          }
+  14          
+  15          unsigned char read_adc(void) {
+  16              unsigned char value;
+  17          
+  18              // Start conversion:
+  19              ADC_WR = 0;        // Pull WR low
+  20              delay_us();
+  21              ADC_WR = 1;        // Release WR
+  22          
+  23              // Wait until INTR goes low:
+  24              while (ADC_INTR == 1);
+  25          
+  26              // Read the converted 8-bit value:
+  27              ADC_RD = 0;        // Pull RD low
+  28              delay_us();
+  29              value = ADC_DATA;  // Sample D0–D7 from Port 1
+  30              ADC_RD = 1;        // Release RD
+  31          
+  32              return value;
+  33          }
+  34          
+  35          void main(void) {
+  36              unsigned char adc_val;
+  37          
+  38              // Make P1 an input port (all bits = 1)
+  39              ADC_DATA = 0xFF;
+  40          
+  41              // Ensure Port 2 is configured as output for LEDs:
+  42              P2 = 0x00;  // All LEDs off initially
+  43          
+  44              while (1) {
+  45                  adc_val = read_adc();
+  46                  P2 = adc_val;  // Show the 8-bit ADC result on LEDs (P2.0–P2.7)
+  47              }
+  48          }
+  49          */
+  50          
+  51          #include <reg51.h>
+  52          
+  53          #define ADC_DATA  P1        // Port 1 for ADC data bus
+  54          sbit ADC_WR   = P3^6;           // Start conversion
+C51 COMPILER V9.60.7.0   MAIN                                                              06/03/2025 19:59:12 PAGE 2   
+
+  55          sbit ADC_RD   = P3^7;           // Read enable
+  56          sbit ADC_INTR = P3^2;           // Conversion complete flag
+  57          
+  58          void delay_us(void) {
+  59   1          unsigned int i;
+  60   1          for (i = 0; i < 5000; i++);
+  61   1      }
+  62          
+  63          unsigned char read_adc(void) {
+  64   1          unsigned char value;
+  65   1          ADC_WR = 0;         // Start A/D conversion
+  66   1          delay_us();
+  67   1          ADC_WR = 1;         // Release WR
+  68   1      
+  69   1          while (ADC_INTR == 1);  // Wait for INTR low
+  70   1      
+  71   1          ADC_RD = 0;         // Read mode
+  72   1          delay_us();
+  73   1          value = ADC_DATA;   // Latch data
+  74   1          ADC_RD = 1;
+  75   1          return value;
+  76   1      }
+  77          
+  78          void UART_Init(void) {
+  79   1          TMOD &= 0x0F;       // Clear Timer1 bits
+  80   1          TMOD |= 0x20;       // Timer1, mode 2 (8-bit auto-reload)
+  81   1          TH1 = 0xFD;         // 9600 baud @11.0592 MHz
+  82   1          SCON = 0x50;        // Mode1, RI=0, TI=0, REN=1
+  83   1          TR1 = 1;            // Start Timer1
+  84   1          TI = 0; RI = 0;
+  85   1      }
+  86          
+  87          void UART_SendByte(unsigned char b) {
+  88   1          SBUF = b;
+  89   1          while (TI == 0);
+  90   1          TI = 0;
+  91   1      }
+  92          
+  93          void UART_SendString(char *str) {
+  94   1          while (*str) {
+  95   2              UART_SendByte(*str++);
+  96   2          }
+  97   1      }
+  98          
+  99          void ByteToASCII(unsigned char val, char *buf) {
+ 100   1          buf[3] = '\0';
+ 101   1          buf[2] = (val % 10) + '0'; val /= 10;
+ 102   1          buf[1] = (val % 10) + '0'; val /= 10;
+ 103   1          buf[0] = (val % 10) + '0';
+ 104   1      }
+ 105          
+ 106          void main(void) {
+ 107   1          unsigned char adc_val;
+ 108   1          char ascii_buf[4];
+ 109   1      
+ 110   1          ADC_DATA = 0xFF;   // Port 1 as input
+ 111   1          P2 = 0x00;         // (Optional) keep LEDs off or still display value
+ 112   1      
+ 113   1          UART_Init();       // Initialize UART for serial output
+ 114   1      
+ 115   1          while (1) {
+ 116   2              adc_val = read_adc();
+C51 COMPILER V9.60.7.0   MAIN                                                              06/03/2025 19:59:12 PAGE 3   
+
+ 117   2              P2 = adc_val;                  // (Optional) keep LEDs updated
+ 118   2              ByteToASCII(adc_val, ascii_buf);
+ 119   2              UART_SendString(ascii_buf);    // Send “000” to “255”
+ 120   2              UART_SendByte('\r');           // Carriage return
+ 121   2              UART_SendByte('\n');           // New line
+ 122   2              // Small delay between samples, if desired
+ 123   2              delay_us();
+ 124   2          }
+ 125   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    200    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       7
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
